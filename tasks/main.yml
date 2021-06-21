@@ -2,7 +2,7 @@
 # tasks file for swygue-redhat-subscription
 
 - name: ensure subscription-manager is installed
-  tags: [always, checks]
+  tags: [checks, register, unregister, repos, consumer_ca, katello_ca]
   block:
     - name: check if subscription-manager is installed
       command: yum list installed subscription-manager
@@ -19,18 +19,18 @@
   register: is_system_registered
   failed_when: False
   changed_when: False
-  tags: [always, checks]
+  tags: [checks, register, unregister, repos, consumer_ca, katello_ca]
 
 - name: declare fact system_registered true if status is registered
   set_fact:
     system_registered: "{{ true if is_system_registered.rc==0 else false }}"
     system_registered_msg: "{{ 'registered' if is_system_registered.rc==0 else 'not registered' }}"
-  tags: [always]
+  tags: [ register, unregister, repos, consumer_ca, katello_ca]
 
 - name: declare fact remove_system_registration if rhsm_unregister is set
   set_fact:
     remove_system_registration: "{{ true if rhsm_unregister else false }}"
-  tags: [always]
+  tags: [ register, unregister, repos, consumer_ca, katello_ca]
 
 - name: set fact use_system_identity when rhsm_identity is defined
   set_fact:
@@ -63,7 +63,7 @@
   failed_when: False
   changed_when: False
   register: system_rhsm_status
-  tags: [always]
+  tags: [ register, unregister, repos, consumer_ca, katello_ca]
 
 ## need to find a better way to fix registration when status is not Current
 #- name: set fix_registration to true if subscription-manager status is not current
@@ -74,7 +74,7 @@
 - name: set rhsm_fix_registration to true if fix_registration is defined
   set_fact:
     rhsm_fix_registration: "{{ true if fix_registration == true else false }}"
-  tags: [always]
+  tags: [ register, unregister, repos, consumer_ca, katello_ca]
 
 - name: display some keys facts about system registration
   debug:

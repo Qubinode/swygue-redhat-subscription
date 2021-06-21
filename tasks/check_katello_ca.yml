@@ -10,8 +10,7 @@
 - name: declare the fact katello_ca_installed
   set_fact:
     katello_ca_installed: "{{ true if  katello_ca_pkg.stdout != '' else false }}"
-  tags:
-    - always
+  tags: [register, unregister, repos, consumer_ca, katello_ca]
 
 - name: check if system katello-ca-consumer CN is correct
   command: grep -xq 'CN={{ rhsm_hostname }}' /usr/bin/katello-rhsm-consumer
